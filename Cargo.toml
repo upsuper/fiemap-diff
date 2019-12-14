@@ -1,0 +1,13 @@
+[package]
+name = "fiemap-diff"
+version = "0.1.0"
+authors = ["Xidorn Quan <me@upsuper.org>"]
+edition = "2018"
+license = "GPL-3.0-or-later"
+publish = false
+
+[dependencies]
+fiemap = "0.1.1"
+structopt = "0.3.5"
+anyhow = "1.0.25"
+humansize = "1.1.0"
