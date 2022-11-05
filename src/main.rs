@@ -1,3 +1,4 @@
+use std::cmp::Ordering;
 use anyhow::Result;
 use clap::Parser;
 use fiemap::FiemapExtent;
@@ -35,26 +36,34 @@ fn main() -> Result<()> {
                 } else {
                     // Otherwise, two extents intersect.
                     // Align the start of the two extents.
-                    if e1.start < e2.start {
-                        diff_bytes1 += e2.start - e1.start;
-                        e1.start = e2.start;
-                    } else if e1.start > e2.start {
-                        diff_bytes2 += e1.start - e2.start;
-                        e2.start = e1.start;
+                    match Ord::cmp(&e1.start, &e2.start) {
+                        Ordering::Less => {
+                            diff_bytes1 += e2.start - e1.start;
+                            e1.start = e2.start;
+                        }
+                        Ordering::Greater => {
+                            diff_bytes2 += e1.start - e2.start;
+                            e2.start = e1.start;
+                        }
+                        Ordering::Equal => {}
                     }
                     // Count the shared part of the two extents.
-                    if e1.end < e2.end {
-                        shared_bytes += e1.end - e1.start;
-                        e2.start = e1.end;
-                        extent1 = extents1.next();
-                    } else if e1.end > e2.end {
-                        shared_bytes += e2.end - e2.start;
-                        e1.start = e2.end;
-                        extent2 = extents2.next();
-                    } else {
-                        shared_bytes += e1.end - e1.start;
-                        extent1 = extents1.next();
-                        extent2 = extents2.next();
+                    match Ord::cmp(&e1.end, &e2.end) {
+                        Ordering::Less => {
+                            shared_bytes += e1.end - e1.start;
+                            e2.start = e1.end;
+                            extent1 = extents1.next();
+                        }
+                        Ordering::Greater => {
+                            shared_bytes += e2.end - e2.start;
+                            e1.start = e2.end;
+                            extent2 = extents2.next();
+                        }
+                        Ordering::Equal => {
+                            shared_bytes += e1.end - e1.start;
+                            extent1 = extents1.next();
+                            extent2 = extents2.next();
+                        }
                     }
                 }
             }
