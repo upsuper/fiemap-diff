@@ -8,6 +8,6 @@ publish = false
 
 [dependencies]
 fiemap = "0.1.1"
-structopt = "0.3.5"
+clap = { version = "4", features = ["derive"] }
 anyhow = "1.0.25"
 humansize = "1.1.0"

@@ -1,21 +1,19 @@
 use anyhow::Result;
+use clap::Parser;
 use fiemap::FiemapExtent;
 use humansize::{file_size_opts::BINARY, FileSize};
 use std::ops::Range;
 use std::path::{Path, PathBuf};
 use std::u64;
-use structopt::StructOpt;
 
-#[derive(Debug, StructOpt)]
+#[derive(Debug, Parser)]
 struct Opt {
-    #[structopt(parse(from_os_str))]
     file1: PathBuf,
-    #[structopt(parse(from_os_str))]
     file2: PathBuf,
 }
 
 fn main() -> Result<()> {
-    let opt = Opt::from_args();
+    let opt = Opt::parse();
     let mut extents1 = get_sorted_physical_ranges(&opt.file1)?.into_iter();
     let mut extents2 = get_sorted_physical_ranges(&opt.file2)?.into_iter();
     let mut extent1 = extents1.next();
