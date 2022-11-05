@@ -1,7 +1,7 @@
 use anyhow::Result;
 use clap::Parser;
 use fiemap::FiemapExtent;
-use humansize::{file_size_opts::BINARY, FileSize};
+use humansize::{SizeFormatter, BINARY};
 use std::ops::Range;
 use std::path::{Path, PathBuf};
 use std::u64;
@@ -70,9 +70,9 @@ fn main() -> Result<()> {
         }
     }
 
-    let diff_bytes1 = diff_bytes1.file_size(BINARY).unwrap();
-    let diff_bytes2 = diff_bytes2.file_size(BINARY).unwrap();
-    let shared_bytes = shared_bytes.file_size(BINARY).unwrap();
+    let diff_bytes1 = SizeFormatter::new(diff_bytes1, BINARY);
+    let diff_bytes2 = SizeFormatter::new(diff_bytes2, BINARY);
+    let shared_bytes = SizeFormatter::new(shared_bytes, BINARY);
     println!("{}: {} unique", opt.file1.display(), diff_bytes1);
     println!("{}: {} unique", opt.file2.display(), diff_bytes2);
     println!("{} shared", shared_bytes);

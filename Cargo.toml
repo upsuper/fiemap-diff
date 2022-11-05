@@ -10,4 +10,4 @@ publish = false
 fiemap = "0.1.1"
 clap = { version = "4", features = ["derive"] }
 anyhow = "1.0.25"
-humansize = "1.1.0"
+humansize = "2"
